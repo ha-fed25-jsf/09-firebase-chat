@@ -1,0 +1,50 @@
+
+.box {
+	border: 1px solid var(--c2);
+	border-radius: 0.3em;
+	margin: 0.3em 0;
+	margin-bottom: 0.7em;
+	padding: 0.3em 1.2em;
+	box-shadow: 2px 4px 6px var(--c2);
+
+	p { 
+		margin: 0;
+	}
+}
+
+.left {
+	display: flex;
+	justify-content: left;
+}
+.right {
+	display: flex;
+	justify-content: right;
+}
+.user {
+	background-color: var(--c3);
+}
+
+button {
+	padding: 0.4em 1.2em;
+	border-radius: 0.4em;
+	border: 1px solid var(--c5);
+	background-color: var(--c5);
+	color: var(--c1);
+	font-size: 90%;
+	font-weight: bold;
+	margin: 0;
+	/* box-shadow: */
+
+	transition: 0.5s all;
+
+	&.ghost {
+		background-color: transparent;
+		color: var(--c5);
+	}
+
+	&:hover {
+		cursor: pointer;
+		background-color: var(--c3);
+		border-color: var(--c3);
+	}
+}

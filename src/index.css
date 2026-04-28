@@ -1,0 +1,39 @@
+:root {
+	--c1: #C3DEF4;
+	--c2: #133F63;
+	--c3: #4F9EDE;
+	--c4: #9CC8EC;
+	--c5: #1A5789;
+}
+body {
+	padding: 0;
+	margin: 0;
+	font-family: Roboto, "sans serif";
+	background-color: var(--c1);
+}
+h1, h2, h3 { margin: 0; }
+
+.app {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+header, main {
+	padding: 0.5rem 1rem;
+}
+header {
+	display: flex;
+	align-items: center;
+	background-color: var(--c3);
+	box-shadow: 0 4px 5px 2px var(--c2);
+	z-index: 1;
+	padding: 0;
+
+	img {
+		width: 4em;
+	}
+}
+main {
+	flex-grow: 1;
+	background: linear-gradient(to bottom, var(--c1), var(--c4));
+}
