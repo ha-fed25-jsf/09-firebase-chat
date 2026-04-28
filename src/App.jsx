@@ -1,15 +1,26 @@
 
 import { useState } from 'react'
 import './App.css'
-import { getMessages } from './data/crud'
+import { getMessages, sendMessage } from './data/crud'
 
 const App = () => {
 	const [messages, setMessages] = useState([])
+	const [senderMessage, setSenderMessage] = useState('')
 
 
 	const handleGet = async () => {
 		const ms = await getMessages()
 		setMessages(ms)
+	}
+
+	const handleSend = async () => {
+		setSenderMessage('')
+		// Vi returnerar id ifall vi skulle behöva det i framtiden
+		const newId = await sendMessage({
+			text: senderMessage,
+			sender: 'David'
+		})
+		console.log('Meddelande skickat')
 	}
 
 	return (
@@ -28,16 +39,14 @@ const App = () => {
 						<p> Från {m.sender} den {m.time}. </p>
 					</div>
 				))}
-				{/* main
-				<div className="box">
-					<p> box 1 </p>
-				</div>
-				<div className="box user right">
-					<p> box 2 </p>
-				</div>
-
-				<button className="primary"> yolo 1 </button>
-				<button className="ghost"> yolo 2 </button> */}
+				
+				<section>
+					<input type="text"
+						value={senderMessage}
+						onChange={e => setSenderMessage(e.target.value)}
+						/>
+					<button onClick={handleSend}> Skicka </button>
+				</section>
 			</main>
 		</div>
 	)

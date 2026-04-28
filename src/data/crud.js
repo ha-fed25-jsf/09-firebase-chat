@@ -1,4 +1,4 @@
-import { getFirestore, collection, addDoc, getDocs, getDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore/lite'
+import { getFirestore, collection, addDoc, getDocs, getDoc, doc, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore/lite'
 import { db } from './database.js'
 
 
@@ -33,7 +33,21 @@ function toDateTimeString(firestoreTimestamp) {
 	return formattedDateTime
 }
 
-export { getMessages }
+
+async function sendMessage(message) {
+// await addDoc(fruitsCol, { name })
+	const msgCol = collection(db, 'messages')
+	const docRef = await addDoc(msgCol, {
+		...message,
+		time: Timestamp.now()
+	})
+	console.log("Dokument skrivet med ID: ", docRef.id);
+	return docRef.id
+}
+
+
+
+export { getMessages, sendMessage }
 
 // async function getFruits() {
 // 	const fruitsCol = collection(db, 'fruits')
