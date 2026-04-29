@@ -1,7 +1,7 @@
 
 import { useState } from 'react'
 import './App.css'
-import { getMessages, sendMessage } from './data/crud'
+import { deleteMessage, getMessages, sendMessage } from './data/crud'
 
 const App = () => {
 	const [messages, setMessages] = useState([])
@@ -21,6 +21,14 @@ const App = () => {
 			sender: 'David'
 		})
 		console.log('Meddelande skickat')
+		await handleGet()
+	}
+
+	const handleDelete = async id => {
+		await deleteMessage(id)
+		// Borttagningen färdig (eller misslyckad)
+		// Nu kan vi uppdatera gränssnittet
+		await handleGet()
 	}
 
 	return (
@@ -28,7 +36,7 @@ const App = () => {
 			<header>
 				<img src="/favicon.png" />
 				<h1> Fire chat </h1>
-				
+
 			</header>
 			<main>
 				<button onClick={handleGet}> Hämta meddelanden </button>
@@ -37,9 +45,10 @@ const App = () => {
 					<div key={m.id} className="box">
 						<p> {m.text} </p>
 						<p> Från {m.sender} den {m.time}. </p>
+						<button onClick={() => handleDelete(m.id)} className="ghost"> Ta bort </button>
 					</div>
 				))}
-				
+
 				<section>
 					<input type="text"
 						value={senderMessage}

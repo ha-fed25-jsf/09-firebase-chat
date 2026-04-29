@@ -1,8 +1,8 @@
 import { getFirestore, collection, addDoc, getDocs, getDoc, doc, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore/lite'
 import { db } from './database.js'
 
-
-const msgCol = collection(db, 'messages')
+const colName = 'messages'
+const msgCol = collection(db, colName)
 
 // Meddelandeobjekt: (id,) sender, text, time
 async function getMessages() {
@@ -55,8 +55,22 @@ async function sendMessage(message) {
 }
 
 
+async function deleteMessage(id) {
+	// utgå från message collection (msgCol)
+	// skapa en dokumentreferens som pekar på dokumentet vi vill ta bort
+	// anropa deleteDoc()
+	// Hoppas att dokumentet fanns och att det tas bort
+	try {
+		const docRef = doc(db, colName, id)
+		await deleteDoc(docRef)
+	} catch(error) {
+		console.log('Något gick fel vid borttagning av dokument:\n', error.message)
+	}
+}
 
-export { getMessages, sendMessage }
+
+
+export { getMessages, sendMessage, deleteMessage }
 
 // async function getFruits() {
 // 	const fruitsCol = collection(db, 'fruits')
