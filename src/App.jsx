@@ -6,29 +6,39 @@ import { deleteMessage, getMessages, sendMessage } from './data/crud'
 const App = () => {
 	const [messages, setMessages] = useState([])
 	const [senderMessage, setSenderMessage] = useState('')
+	const [waitingForResult, setWaitingForResult] = useState(false)
 
 
 	const handleGet = async () => {
+		setWaitingForResult(true)
+		await doGetMessages()
+		setWaitingForResult(false)
+	}
+	async function doGetMessages() {
 		const ms = await getMessages()
 		setMessages(ms)
 	}
 
 	const handleSend = async () => {
 		setSenderMessage('')
+		setWaitingForResult(true)
 		// Vi returnerar id ifall vi skulle behöva det i framtiden
 		const newId = await sendMessage({
 			text: senderMessage,
 			sender: 'David'
 		})
 		console.log('Meddelande skickat')
-		await handleGet()
+		await doGetMessages()
+		setWaitingForResult(false)
 	}
 
 	const handleDelete = async id => {
+		setWaitingForResult(true)
 		await deleteMessage(id)
 		// Borttagningen färdig (eller misslyckad)
 		// Nu kan vi uppdatera gränssnittet
-		await handleGet()
+		await doGetMessages()
+		setWaitingForResult(false)
 	}
 
 	return (
@@ -54,7 +64,9 @@ const App = () => {
 						value={senderMessage}
 						onChange={e => setSenderMessage(e.target.value)}
 						/>
-					<button onClick={handleSend}> Skicka </button>
+					<button onClick={handleSend}
+						disabled={waitingForResult}
+						> Skicka </button>
 				</section>
 			</main>
 		</div>
