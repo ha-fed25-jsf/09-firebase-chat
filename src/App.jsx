@@ -3,11 +3,15 @@ import { useState } from 'react'
 import './App.css'
 import { deleteMessage, getMessages, sendMessage } from './data/crud'
 import DisplayMessage from './components/DisplayMessage.jsx'
+import { signIn } from './data/auth.js'
 
 const App = () => {
 	const [messages, setMessages] = useState([])
 	const [senderMessage, setSenderMessage] = useState('')
 	const [waitingForResult, setWaitingForResult] = useState(false)
+	const [loginForm, setLoginForm] = useState({
+		email: '', password: ''
+	})
 
 
 	const handleGet = async () => {
@@ -42,6 +46,10 @@ const App = () => {
 		setWaitingForResult(false)
 	}
 
+	const handleSignIn = async () => {
+		await signIn(loginForm)
+	}
+
 	return (
 		<div className="app">
 			<header>
@@ -68,6 +76,27 @@ const App = () => {
 					<button onClick={handleSend}
 						disabled={waitingForResult}
 						> Skicka </button>
+				</section>
+
+				<section>
+					<label> E-post </label>
+					<input type="text"
+						value={loginForm.email}
+						onChange={e => setLoginForm({
+							...loginForm,
+							email: e.target.value
+						})}
+						/>
+					<label> Lösenord </label>
+					<input type="password"
+						value={loginForm.password}
+						onChange={e => setLoginForm({
+							...loginForm,
+							password: e.target.value
+						})}
+						/>
+					{/* TODO: validering */}
+					<button onClick={handleSignIn}> Logga in </button>
 				</section>
 			</main>
 		</div>
