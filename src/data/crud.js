@@ -10,27 +10,27 @@ async function getMessages() {
 	const msgList = msgSnapshot.docs.map(doc => {
 		// console.log('Dokument från Firestore: ', doc)
 		const rawData = doc.data()
-		rawData.time = toDateTimeString(rawData.time)
+		rawData.time = rawData.time.toDate()
 		rawData.id = doc.id
 		// console.log('getMessages returnerar objekt: ', rawData)
 		return rawData
 	})
 	msgList.sort((m1, m2) => {
-		if( m1.time < m2.time ) {
+		if( m1.time.getTime() < m2.time.getTime() ) {
 			return -1
-		} else if( m1.time > m2.time ) {
+		} else if( m1.time.getTime() > m2.time.getTime() ) {
 			return 1
 		} else {
 			0
 		}
 	})
-	return msgList
+	return msgList.map(msg => ({
+		...msg,
+		time: toDateTimeString(msg.time)
+	}))
 }
 
-function toDateTimeString(firestoreTimestamp) {
-	// Anta att 'firestoreTimestamp' är ditt Timestamp-objekt från Firestore
-	const dateObject = firestoreTimestamp.toDate();
-	//dateObject.toLocalDate??
+function toDateTimeString(dateObject) {
 	const year = dateObject.getFullYear();
 	const month = (dateObject.getMonth() + 1).toString().padStart(2, '0'); // Månader är 0-indexerade
 	const day = dateObject.getDate().toString().padStart(2, '0');
