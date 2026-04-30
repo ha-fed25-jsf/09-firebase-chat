@@ -23,6 +23,10 @@
 .user {
 	background-color: var(--c3);
 }
+.button-row {
+	display: flex;
+	gap: 0.8em;
+}
 
 button {
 	padding: 0.4em 1.2em;

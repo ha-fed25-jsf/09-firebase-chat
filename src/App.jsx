@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import './App.css'
 import { deleteMessage, getMessages, sendMessage } from './data/crud'
+import DisplayMessage from './components/DisplayMessage.jsx'
 
 const App = () => {
 	const [messages, setMessages] = useState([])
@@ -52,14 +53,14 @@ const App = () => {
 				<button onClick={handleGet}> Hämta meddelanden </button>
 
 				{messages.map(m => (
-					<div key={m.id} className="box">
-						<p> {m.text} </p>
-						<p> Från {m.sender} den {m.time}. </p>
-						<button onClick={() => handleDelete(m.id)} className="ghost"> Ta bort </button>
-					</div>
+					<DisplayMessage key={m.id}
+						m={m}
+						handleDelete={handleDelete}
+						refetch={handleGet}
+						/>
 				))}
 
-				<section>
+				<section className="button-row">
 					<input type="text"
 						value={senderMessage}
 						onChange={e => setSenderMessage(e.target.value)}

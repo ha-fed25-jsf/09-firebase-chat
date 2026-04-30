@@ -1,8 +1,8 @@
 import { getFirestore, collection, addDoc, getDocs, getDoc, doc, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore/lite'
 import { db } from './database.js'
 
-const colName = 'messages'
-const msgCol = collection(db, colName)
+const collectionName = 'messages'
+const msgCol = collection(db, collectionName)
 
 // Meddelandeobjekt: (id,) sender, text, time
 async function getMessages() {
@@ -39,7 +39,7 @@ function toDateTimeString(dateObject) {
 
 	const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}`;
 
-	console.log(formattedDateTime); // Output: "2026-04-28 13:15" (eller det faktiska datumet/tiden)
+	// console.log(formattedDateTime); // Output: "2026-04-28 13:15" (eller det faktiska datumet/tiden)
 	return formattedDateTime
 }
 
@@ -61,7 +61,7 @@ async function deleteMessage(id) {
 	// anropa deleteDoc()
 	// Hoppas att dokumentet fanns och att det tas bort
 	try {
-		const docRef = doc(db, colName, id)
+		const docRef = doc(db, collectionName, id)
 		await deleteDoc(docRef)
 	} catch(error) {
 		console.log('Något gick fel vid borttagning av dokument:\n', error.message)
@@ -69,8 +69,22 @@ async function deleteMessage(id) {
 }
 
 
+async function updateMessage(id, newText) {
+	try {
+		const docRef = doc(db, collectionName, id)
+		await updateDoc(docRef, {
+			// Vi behöver bara skicka med de egenskaper som ska ändras (strunta i sender och time)
+			text: newText
+		})
+		console.log('Ändrade dokument i databasen')
+	} catch(error) {
+		console.error('Fel vid uppdatering av dokument:\n", error')
+	}
+}
 
-export { getMessages, sendMessage, deleteMessage }
+
+
+export { getMessages, sendMessage, deleteMessage, updateMessage }
 
 // async function getFruits() {
 // 	const fruitsCol = collection(db, 'fruits')
