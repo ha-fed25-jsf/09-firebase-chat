@@ -1,9 +1,12 @@
 import { getFirestore, collection, addDoc, getDocs, getDoc, doc, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore/lite'
 import { db } from './database.js'
 
-const collectionName = 'messages'
-const msgCol = collection(db, collectionName)
+const messageCollectionName = 'messages'
+const userCollectionName = 'users'
+const msgCol = collection(db, messageCollectionName)
+const userCol = collection(db, userCollectionName)
 
+// ----------------------------------------------- //
 // Meddelandeobjekt: (id,) sender, text, time
 async function getMessages() {
 	const msgSnapshot = await getDocs(msgCol)
@@ -61,7 +64,7 @@ async function deleteMessage(id) {
 	// anropa deleteDoc()
 	// Hoppas att dokumentet fanns och att det tas bort
 	try {
-		const docRef = doc(db, collectionName, id)
+		const docRef = doc(db, messageCollectionName, id)
 		await deleteDoc(docRef)
 	} catch(error) {
 		console.log('Något gick fel vid borttagning av dokument:\n', error.message)
@@ -71,7 +74,7 @@ async function deleteMessage(id) {
 
 async function updateMessage(id, newText) {
 	try {
-		const docRef = doc(db, collectionName, id)
+		const docRef = doc(db, messageCollectionName, id)
 		await updateDoc(docRef, {
 			// Vi behöver bara skicka med de egenskaper som ska ändras (strunta i sender och time)
 			text: newText
@@ -83,8 +86,34 @@ async function updateMessage(id, newText) {
 }
 
 
+// ----------------------------------------------- //
+// User-objekt: uid, displayName
+// Letar efter en användare med ett specifikt uid
+// Om det finns, returnera { uid, displayName }
+// Annars returnera null
+async function getUser(uid) {
+	// Hämta alla användare
+	// Välj ut den användare som har samma uid
+	// Om ingen användare - fail
+	// Om hittat användare - returnera datan
+	const usersSnapshot = await getDocs(userCol)
+	const usersList = usersSnapshot.docs.map(doc => doc.data())
+	// Nu har vi en lista med user data: [ { uid, displayName } ]
 
-export { getMessages, sendMessage, deleteMessage, updateMessage }
+	const maybeUser = usersList.find(user => user.uid === uid)
+	if( maybeUser ) {
+		return maybeUser
+	}
+	return null
+
+	// find - returnerar ett objekt eller undefined
+	// filter - returnerar en lista
+	// findIndex - returnerar det index som ett objekt har i en lista
+}
+
+
+
+export { getMessages, sendMessage, deleteMessage, updateMessage, getUser }
 
 // async function getFruits() {
 // 	const fruitsCol = collection(db, 'fruits')

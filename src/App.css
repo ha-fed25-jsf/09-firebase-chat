@@ -57,3 +57,10 @@ button {
 		cursor: not-allowed;
 	}
 }
+
+.signin-form {
+	margin-top: 2rem;
+	display: flex;
+	flex-direction: column;
+	max-width: 20em;
+}

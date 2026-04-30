@@ -1,7 +1,6 @@
-
 import { useState } from 'react'
 import './App.css'
-import { deleteMessage, getMessages, sendMessage } from './data/crud'
+import { deleteMessage, getMessages, getUser, sendMessage } from './data/crud'
 import DisplayMessage from './components/DisplayMessage.jsx'
 import { signIn } from './data/auth.js'
 
@@ -12,6 +11,7 @@ const App = () => {
 	const [loginForm, setLoginForm] = useState({
 		email: '', password: ''
 	})
+	const [user, setUser] = useState(null)  // null eller { uid, displayName }
 
 
 	const handleGet = async () => {
@@ -30,7 +30,8 @@ const App = () => {
 		// Vi returnerar id ifall vi skulle behöva det i framtiden
 		const newId = await sendMessage({
 			text: senderMessage,
-			sender: 'David'
+			sender: user ? user.displayName : 'Gäst'
+			// sender: user?.displayName ?? 'Gäst'  <- alternativ lösning
 		})
 		console.log('Meddelande skickat')
 		await doGetMessages()
@@ -47,7 +48,16 @@ const App = () => {
 	}
 
 	const handleSignIn = async () => {
-		await signIn(loginForm)
+		const creds = await signIn(loginForm)
+		if( creds ) {
+			const maybeUser = await getUser(creds.uid)
+			if( maybeUser ) {
+				setUser(maybeUser)
+			}
+		}
+	}
+	const handleSignOut = () => {
+		setUser(null)
 	}
 
 	return (
@@ -55,6 +65,7 @@ const App = () => {
 			<header>
 				<img src="/favicon.png" />
 				<h1> Fire chat </h1>
+				{user && <p>{user.displayName}</p> }
 
 			</header>
 			<main>
@@ -78,7 +89,7 @@ const App = () => {
 						> Skicka </button>
 				</section>
 
-				<section>
+				<section className="signin-form">
 					<label> E-post </label>
 					<input type="text"
 						value={loginForm.email}
@@ -97,6 +108,7 @@ const App = () => {
 						/>
 					{/* TODO: validering */}
 					<button onClick={handleSignIn}> Logga in </button>
+					<button className="ghost" onClick={handleSignOut}> Logga ut </button>
 				</section>
 			</main>
 		</div>

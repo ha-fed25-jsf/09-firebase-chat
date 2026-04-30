@@ -1,6 +1,7 @@
 import { signInWithEmailAndPassword } from "firebase/auth"
 import { auth } from "./database.js"
 
+// Autentisera en användare (logga in)
 async function signIn({ email, password }) {
 	try {
 		const userCredentials = await signInWithEmailAndPassword(auth, email, password)
@@ -17,6 +18,8 @@ async function signIn({ email, password }) {
 	} catch(error) {
 		console.log('Sign in error: ', error.message)
 		return null
+
+		// Tips! Lägg till validering i formuläret, så man inte kan skicka felaktiga e-postadresser.
 	}
 }
 
